@@ -1,0 +1,76 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "26.0.2"
+
+    defaultConfig {
+        applicationId "com.example.v5maintest"
+        minSdkVersion 19
+        targetSdkVersion 22
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    repositories {
+     flatDir {
+         dirs 'libs'   // aar目录
+     }
+        sourceSets {
+            main {
+                jniLibs.srcDirs = ['./libs']
+            }
+        }
+
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+    }
+//    //重命名aar的方法
+//    android.libraryVariants.all { variant ->
+//        if(variant.name.equalsIgnoreCase("release")) {
+//            variant.outputs.all { output ->
+//                def f = output.outputFileName
+//                if (f != null && f.endsWith('.aar')) {
+//                    def fileName = "Verify5Client-v${defaultConfig.versionName}.aar"
+//                    output.outputFileName = fileName
+//                }
+//            }
+//        }
+//    }
+
+}
+//
+
+dependencies {
+
+    compile fileTree(dir: "libs", include: ["*.jar"])
+    compile 'com.android.support:appcompat-v7:25.0.0'
+    testCompile 'junit:junit:4.12'
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+
+    compile "com.orhanobut:hawk:2.0.1"
+    compile 'com.squareup.okhttp3:okhttp:3.12.1'
+    compile 'com.hjq:xxpermissions:6.5'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
+
+def  isAAr=false;
+    if (!isAAr){
+        compile project(path: ':verify5-android-sdk')
+    }else {
+        compile(name: 'verify5-android-sdk-2.5.6', ext: 'aar')
+    }
+
+
+}
